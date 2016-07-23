@@ -153,8 +153,8 @@ public struct _StringCore {
     self._baseAddress = baseAddress
 
     self._countAndFlags
-      = (UInt(elementShift) << (UInt._sizeInBits - 1))
-      | ((hasCocoaBuffer ? 1 : 0) << (UInt._sizeInBits - 2))
+      = (UInt(elementShift) << (UInt.bitWidth - 1))
+      | ((hasCocoaBuffer ? 1 : 0) << (UInt.bitWidth - 2))
       | UInt(count)
 
     self._owner = owner
@@ -201,7 +201,7 @@ public struct _StringCore {
   /// Left shift amount to apply to an offset N so that when
   /// added to a UnsafeMutablePointer<_RawByte>, it traverses N elements.
   var elementShift: Int {
-    return Int(_countAndFlags >> (UInt._sizeInBits - 1))
+    return Int(_countAndFlags >> (UInt.bitWidth - 1))
   }
 
   /// The number of bytes per element.
@@ -222,7 +222,7 @@ public struct _StringCore {
 
   /// Are we using an `NSString` for storage?
   public var hasCocoaBuffer: Bool {
-    return Int((_countAndFlags << 1)._value) < 0
+    return Int((_countAndFlags << 1)._storage) < 0
   }
 
   public var startASCII: UnsafeMutablePointer<UTF8.CodeUnit> {
